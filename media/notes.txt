@@ -1,0 +1,40 @@
+
+Notes:	
+	certian parts that need to be removed from current system are labeled
+	
+	
+	
+	
+	
+	
+ToDo:
+
+	finish world generation system { 
+	
+		(partly-done) switch to 2d grid system{
+			intergrate into world generation system
+	}}
+	
+	
+	
+	Add options to not kill enemies
+	
+	Windo is high sesolutions but images/ sprites can be resized
+	
+	make generator run at beginning of game
+	
+	
+	redesign game to work with saves(major edits to multiple systems including(world generation, player inventory, ) )
+	
+	Helix's name goes in credis for major contributation
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	

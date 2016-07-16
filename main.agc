@@ -2,474 +2,51 @@
 // Project: Creighton 
 // Created: 2016-01-03
 	
-/* notes
-
-		Todo!
-			make world save system!
-					make code that makes 1000 x 1000 files to represent world biome tiles
-						file name "1.2.txt" the "1" stands for x coordinate and the "2" stands for y axis
-							sample code:
-								for Xaxis = 0 to 1000
-									for Yaxis = 0 to 1000
-										str(Xaxis) + "." + str(Yaxis) + ".png" = currentFileName // code strings together word tile coordinates into a file name to easily access the world data 
-										createfile(currentFileName)
-									
-									return Yaxis
-								return Xaxis
 
 
-
-
-
-
-	General
-		"Point and click/ text based hybrid"
-
-	coding
-		samples
-			archived
-				
-				
-				World gen array setup----\/
-				
-					Dim WorldArray[WorldLengthX, WorldLengthY, TileDataAmount] // (WorldLengthX, WorldLengthY, TileDataAmount) This creates the world region number identifiers and creates storedge for data for each Region  
-
-					For X= 0 to WorldLengthX //starts a counter that fills every coordinate combination with 0
-			
-						For Y=0 to WorldLengthY
-							For Z=0 to TileDataAmount
-								WorldArray[X,Y,Z] =0 // fills all of the array levels for the 2d world array with a "0" value(otherwise the array would be useless) 
-							Next Z
-						Next Y
-					Next X 
-				
-				World gen array setup----^
-				
-				WRITEING FILES-----\/
-					//Create a test file
-					GameFirstRunfile$="agktest.txt"
-					OpenToWrite(1,GameFirstRunfile$)
-					WriteLine(1,"AGK rules!")
-					CloseFile(1)  					
-				WRITEING FILES------^
-				
-				IF THEN CASE STATEMENT STUFF
-											old stuff to be deleted
-							CurrentTile = Random ( 1, 2 ) // selects between two outputs that will define what type of file is underfoot (used in current system and will be removed)
-						`Defining the Starting tile outputs	
-
-
-							If CurrentTile = 1 // sets a string to the value of the current tile (to be removed in next system)
-								CurrentTile$ = "Grass" 
-							Endif
-							
-							If CurrentTile = 2 // sets a string to the value of the current tile (to be removed in next system)
-								CurrentTile$ = "Dirt"
-							endif	
-						  
-							
-							
-								TextIdentifier = 0 
-							
-								select text$ //Observing what the scaracter enters and dose something (currently only searches)
-							  case "travel left":
-								Print ("Traveling left " )
-								P_WantsTravelLeft = 1
-								
-								Gosub _WorldGenSystem
-								
-								IsCorrectText = 1
-							  endcase
-							  
-							  case "travel right":
-								Print ("Traveling right")
-									P_WantsTravelRight = 1
-									
-									Gosub _WorldGenSystem
-								
-								IsCorrectText = 1
-							  endcase
-							  
-							  case "surroundings":
-								Print ("the ground is "+ CurrentTile$)
-								IsCorrectText = 1
-							  endcase
-							  
-							  case "look around":
-								Print ("the ground is "+ CurrentTile$)
-								IsCorrectText = 1
-								
-							  endcase
-							  
-							  case "search":
-								Print ("the ground is "+ CurrentTile$)
-								IsCorrectText = 1
-								
-							  endcase
-							  
-							  case "look at floor":
-								Print ("the ground is "+ CurrentTile$)
-								IsCorrectText = 1
-								
-							  endcase
-							  
-							  case "inspect floor":
-								Print ("the ground is "+ CurrentTile$)
-								IsCorrectText = 1
-							  endcase
-							  
-							  case default:
-								  TextIdentifier = 1
-								  DeleteEditBox(1)
-								  print("not valid input")
-								  sync()
-								  Sleep(600)
-								  
-							  endcase
-							  
-							endselect
-
-								If TextIdentifier = 1 then Goto EditboxStartlabel
-
-
-
-								DirtobjectLootQuant = 10
-								GrassobjectLootQuant = 10
-								
-							
-							
-							GrassLootItemPickUp = Random ( 0, 2 ) //from 1 to 3		
-							
-							GrassLootItemID = GrassItemsArray[DirtLootItemPickUp]
-							
-							
-							
-							
-							
-							
-							InventorieItemIDCounter = 0
-							counter1 = 1
-							If CurrentTile = 1
-								
-								While counter1 < GrassobjectLootQuant // starts a counter1# variable that will run as many times as there is loot
-
-									
-									InventorieArray[InventorieItemIDCounter] = DirtLootItemID
-									
-									INC InventorieItemIDCounter
-									INC counter1
-
-								Endwhile
-							endif
-
-
-
-
-							DirtLootItemPickUp = Random ( 0, 2 ) //from 1 to 3		
-							
-							DirtLootItemID = DirtItemsArray[DirtLootItemPickUp]
-							
-							InventorieItemIDCounter2 = 0
-							counter2 = 1
-							
-							If CurrentTile = 2
-								
-								While counter2 < DirtobjectLootQuant // starts a counter1# variable that will run as many times as there is loot
-									
-									InventorieArray[InventorieItemIDCounter2]= DirtLootItemID
-									
-									INC InventorieItemIDCounter2
-									INC counter2
-								Endwhile
-				
-				
-				CREATING MULTIPLE SPRITES
-										ButtonRowGenHeightPosCounter = - 300 // this is a counter variable. defines how high the first row is. lower the number the higher.
-										
-										ButtonGenDone = 0
-										
-										For ButtonRowGen = 0 to 6 //defines how many rows of sprites there are
-											ButtonsGenCounter = 100 // defines how far the starting sprites are from the center and is incremented .
-											
-											ButtonsGenSprites = 1 //generic start variable for all of the ids of the sprites
-											
-											GenAdd = 1 //generic start variable for the switch sides variable. 1 is to the right. -1 is to the left 
-											
-											ButtonsGenEnd = 10 //defines how many sprites are in a row overall
-											For ButtonsGen= 1 to ButtonsGenEnd
-											
-												ButtonsGenSprites = CreateSprite ( 0000001 ) // creates a sprite every time its run with a different id because of the ButtonsGenSprites counter 
-												
-												If ButtonsGen = ButtonsGenEnd / 2 + 1 then GenAdd = -1
-												If ButtonsGen = ButtonsGenEnd / 2 + 1 then ButtonsGenCounter = 100
-												
-												If GenAdd = 1 then SetSpritePositionByOffset(  ButtonsGenSprites, XDisplayC / 2 + ButtonsGenCounter, YDisplayC / 2 + ButtonRowGenHeightPosCounter )
-												
-												If GenAdd = -1 then SetSpritePositionByOffset( ButtonsGenSprites, XDisplayC / 2 - ButtonsGenCounter, YDisplayC / 2 + ButtonRowGenHeightPosCounter )
-											
-												ButtonsGenCounter = ButtonsGenCounter + 100
-												
-												ButtonsGenSprites = ButtonsGenSprites + 1						
-												
-											Next ButtonsGen
-											ButtonRowGenHeightPosCounter = ButtonRowGenHeightPosCounter + 100
-										Next ButtonRowGen
-										
-										ButtonGenDone = 1
-										Repeat
-											
-												ButtonID = 1
-											
-											For ButtonActivate = 1 to 70
-
-												ButtonGenX = GetSpriteXByOffset( ButtonActivate )
-												ButtonGenY = GetSpriteYByOffset( ButtonActivate )
-												
-												While GetSpriteHitTest( ButtonID,GetPointerX(),GetPointerY())
-													
-													Print("itWorks")
-													sync()
-													
-													If DevMode = 1 then print("Mouse is over Sprite")
-													sync()						
-													While GetPointerPressed ( ) = 1
-														SetSpritePositionByOffset( 2, ButtonGenX / 2, ButtonGenY / 2 + 30) //sets the button sprite's position by an offset(its center) current settings make the sprite lower than the center of the screen. 
-														TitalScreenExit = 1
-														WorldSelectEnter = 1
-														sync()
-														
-														If DevMode = 1
-															if GetRawKeyPressed(27)  //Esc
-																Exit                  //Close App
-															endif
-														endif	
-														sync()
-													EndWhile
-													sync()	
-												EndWhile
-											
-												ButtonID = ButtonID + 1
-											
-												sync()
-											Next ButtonActivate
-											
-											
-											
-											sync()
-										Until GetPointerPressed ( ) = 1
-										
-										sync()
-			
-			
-			
-				tital-screen
-					//Tital screen initialization codeV1------------------------------------------------------\|/
-						LoadSprite( 1, TitalScreenImage$ )
-						If GameRun = 0 // if the game has not been run yet then the titalscreen loop starts 
-							
-							TitalScreenExit = 0
-							While TitalScreenExit = 0 //loop with variable to exit if a button is pressed 
-								
-								
-								LoadSprite( 0000000, TitalScreenImage$ )
-								AddVirtualButton( 1, XDisplayC / 2, YDisplayC / 2, 50 )
-								//SetVirtualButtonImageUp( index,  ) // code captured for later image to be made
-								sync() //updates the screen so that the tital screen can be seen
-							EndWhile  
-						endif
-					//Tital screen initialization code endV1------------=-0---=--------------------------------^
-					
-					
-					//Tital screen initialization codeV2--------------------------------------------------------\|/
-		
-							If GameRun = 0 // if the game has not been run yet then the titalscreen loop starts 
-								
-								TitalScreenExit = 0 //
-								//load inital sprites and images. some are buttons---\|/
-									LoadSprite( 1, TitalScreenImage$ )
-									LoadSprite( 2, ButtonProto$ )
-
-										
-										SetSpriteShapeBox( 2,  -52, -60, 52, 60,45 ) // makes a square hitbox for the button  coordinates for square hitboxes are from the position of the sprite 0,0 and must be the total height and width divided by 2 and the first 2 must be negitive.
-										SetSpritePositionByOffset( 2, XDisplayC / 2, YDisplayC / 2 + 20) //sets the button sprite's position by an offset(its center) current settings make the sprite lower than the center of the screen. 
-								//load inital sprites and images end------------------^
-								
-									
-									While TitalScreenExit = 0 //loop with variable to exit if a button is pressed 
-										mouseX = GetPointerX()
-										mouseY = GetPointerY()
-										
-										//new button code------\|/
-										
-											if GetPointerState()
-												if GetSpriteHitTest( 2,GetPointerX(),GetPointerY())
-													print("Mouse is over Sprite")
-												endif
-											endif
-												
-											print( mouseX)
-											print( mouseY)
-											print( ScreenFPS())
-										
-										//new button code-------^
-									
-										//SetVirtualButtonImageUp( index,  ) // code captured for later image to be made
-										sync() //updates the screen so that the tital screen can be seen !!!!!!Important to do this in all loops that have graphics!!!!!!!
-										
-									EndWhile  
-								endif
-					//Tital screen initialization code endV2--------------=-0---=--------------------------------^
-		
-				
-		variables
-			identifiers
-				images	
-					0,000,000 -> 9,999,999
-						0,000,000
-							0000000 = tital image
-		display
-			storage
-				display
-					for T=1 to 5
-						Print("test")
-						INVItemID = InventorieArray[T]
-						Gosub _IVN1decoder
-						TEXTPOS= T*30 + 80
-						CreateText (T, INVItemname$ )
-						SetTextPosition ( T, 640,TEXTPOS)
-						SetTextSize ( T, 35)
-						SetTextAlignment( T, 2 )
-					next T
-		editbox stuff
-			EditboxStartlabel: // label usde for incorrect text input 
-			CreateEditBox(1) //crates a text input used for main game world interface
-				SetEditBoxActive(1,1) //makes the  
-				SetEditBoxFocus(1,1)
-				SetEditBoxPosition(1,10,100)
-       
-			Repeat //repeat loop that waits for user text input \|/
-				Print ("placeholder")
-				Sync()
-				
-				Until (GetEditBoxChanged(1)=1) //End Comment---------^
-	
-				text$ = GetEditBoxText(1) //sets the text in textbox to a variable   
-				
-	Graphical
-	
-	Content
-		Character
-			mechanics
-				sleeping
-					sleep for a random time ( cycles)
-			Affinities
-				Affinity system
-					different Affinity routes of speciality in specifc crafts and trades. if the majority of the work you do is in a specific rout then you shall become better in that affinity.
-					 The major affinity routes have different crafting systems.
-						
-				major
-					Mage
-						crafting system
-							magical processes, dusts, essesnces, infusing, enchanting, ect...
-						sub-Affinities
-							Necromancy
-							
-							pyromancy
-							
-							epothacary
-							
-					Mechanist
-						crafting system
-							mechanical machienery, steam power, basic robotics,
-						sub-Affinities
-							Steam engineer
-							
-							Clocksmith
-							
-							
-					Alchemist
-						crafting system
-							chemical synthesis, chemical reactions, potions, chemist's apparatices, evaporation, acids, ect..
-						sub-Affinities
-						 
-					Materialist
-						crafting system
-							collection of materials and assembling them by hand, different workbenches, hand powered tools, tools, blacksmithing.
-						sub-Affinities
-							Blacksmith
-							
-							LeatherWorker
-							
-							Carpenter
-							
-							
-				Minor
-					Scavenger/looter
-					
-					
-				
-		World
-			mechanics
-				planet
-					start on a different
-				time
-					1 tyke is the smallest length of time.
-					10 tykes is a tick.
-					cycle = 250-370 ticks cycle = 2500-3700 tykes ( CycleLengthTicks = Random(250,370)
-						defaultDayHalf = CycleLengthTicks / 2   
-						DayRangeStart = defaultDayHalf - 20 
-						DayRangeEnd = defaultDayHalf + 20
-						DuskTime = Random( DayRangeStart, DayRangeEnd) 
-					1Day= 1cycle  
-			Biomes
-			random events
-				Random encounters 
-					monkey with weapon( random but high chance to have a "GunWand" type of gun and wand are random. The monkey can talk and can be reasoned with. Convorsation:" I didn't know what to do with these things so i shoved them together.  "
-					
-				World generated
-					Random Biome cities( after generation is done if can citi gen = true then random citi type)
-					NukeCaves( natural nuclear reactor caves)
-	
-
-*/
-
-// set display properties \|/
-	
-	XDisplayC = 1080
-	YDisplayC = 720
-  SetVirtualResolution(XDisplayC,YDisplayC)
-	
-					//First must be greater than last
-	// end---------------------^
 
 	// starting variables    \|/
-		`Intergers------------------------\/
-			CurrentX 		= 50
-			CurrentY 		= 50
-			CurrentBiomeNum = 0
-			TileGenCounter 	= 0
-			IsStartTile 	= 1
-			DevMode 		= 1
+		`Intergers------------------------\/ // space for setting all predefined and initalized variables that use integers
+			CurrentMainBiomeTilePlayerXCoordinate 		= 50 // sets The default player xposition on the world  
+			CurrentMainBiomeTilePlayerYCoordinate 		= 50 // sets The default player yposition on the world
+			CurrentPlayerBiomeNum 						= 0  // sets The default biome identification output 
+			TileGenCounter 								= 0  /*[will be moved through the process of finishing the 
+			worldgeneration/save system]  sets The default number for the tile generation counter*/
+			IsStartTile 								= 1  /* sets The default boolean that dedermines wether or not the
+			 current tile the world generator is generating is the first top right tile */ 
+			DevMode 									= 1  /* sets The default boolean for wether or not the entire game 
+			is in Develpoer mod which allows acces to certian thing and allows for faster testing */
+			XDisplayC = 1080 // horizontal screen resolution width to be used later
+			YDisplayC = 720 // vertical screen resolution width to be used later
+			
 			
 			
 		`Intergers end--------------------^
 		
 		`Strings---------------------------------------------------------\/
 			CurrentBiomeStr$	= ""
-			TitalScreenImage$	= "Creighton1280x720.png"
-			ButtonProto$		= "Continue_button_done.png"
-			WordSelectImage$	= "WORLDS.bmp"
+			
 		`Strings End-----------------------------------------------------^
 		
-		`starting File names--------------------------------------------\/
-			GameFirstRunfile$   ="A_first_Time_Run.txt"
+		`starting File names--------------------------------------------\/ //sets the names of files to later be used to initalize them. used incase the names need to be changed 
+			GameFirstRunfile$   ="A_first_Time_Run.txt"     	// sets the name of
+			TitalScreenImage$	= "Creighton1280x720.png"		// sets the name of
+			ButtonProto$		= "Continue_button_done.png"	// sets the name of
+			WordSelectImage$	= "WORLDS.bmp"					// sets the name of
 			
 		`starting File names--------------------------------------------^
 		
 		
 	// starting variables end ^
 	
+// set display properties \|/
 	
+	
+	
+  SetVirtualResolution(XDisplayC,YDisplayC) // sets the horizontal and vertical resolutions using the predefined variables
+	
+					//First must be greater than last
+// set display properties end^	
 	
 	
 	/*Create first time run file and input value
@@ -1125,7 +702,7 @@ biomeGen1Restart:
 Return
 
 _BiomeDecoder:
-	CurrentBiomeNum = WorldArray[ CurrentX, Currenty, 1]
+	CurrentPlayerBiomeNum = WorldArray[ CurrentMainBiomeTileXCoordinate, CurrentMainBiomeTilePlayerYCoordinate 	, 1]
 	
 /* biome notes
 		numbers
@@ -1260,7 +837,7 @@ Return
 _DisplayCoordinates:
 	DisplayCoordinates = 0
 	if DisplayCoordinates = 1 //placeholder to make sure that coords are not displaying 
-		CreateText (6, "x" + Str(CurrentX) + "Y" + Str(CurrentY) )
+		CreateText (6, "x" + Str(CurrentMainBiomeTilePlayerXCoordinate) + "Y" + Str(CurrentMainBiomeTilePlayerYCoordinate 	) )
 		SetTextPosition ( 6, 600, 10)
 		SetTextSize ( 6, 35)
 		SetTextAlignment( 6, 2 )
@@ -1443,4 +1020,446 @@ Function SpriteSnap(SpriteSnapSprite1, SpriteSnapSprite2, ConnectionPoint1, Conn
 EndFunction  //ends function and outputs the value of the Total Variable
 */
 
+
+
+
+
+
+
+
+
+
+
+
+
+/* notes
+
+		Todo!
+			make world save system!
+					make code that makes 1000 x 1000 files to represent world biome tiles
+						file name "1.2.txt" the "1" stands for x coordinate and the "2" stands for y axis
+							sample code:
+								for Xaxis = 0 to 1000
+									for Yaxis = 0 to 1000
+										str(Xaxis) + "." + str(Yaxis) + ".png" = currentFileName // code strings together word tile coordinates into a file name to easily access the world data 
+										createfile(currentFileName)
+									
+									return Yaxis
+								return Xaxis
+
+
+
+
+
+
+	General
+		"Point and click/ text based hybrid"
+
+	coding
+		samples
+			archived
+				
+				
+				World gen array setup----\/
+				
+					Dim WorldArray[WorldLengthX, WorldLengthY, TileDataAmount] // (WorldLengthX, WorldLengthY, TileDataAmount) This creates the world region number identifiers and creates storedge for data for each Region  
+
+					For X= 0 to WorldLengthX //starts a counter that fills every coordinate combination with 0
+			
+						For Y=0 to WorldLengthY
+							For Z=0 to TileDataAmount
+								WorldArray[X,Y,Z] =0 // fills all of the array levels for the 2d world array with a "0" value(otherwise the array would be useless) 
+							Next Z
+						Next Y
+					Next X 
+				
+				World gen array setup----^
+				
+				WRITEING FILES-----\/
+					//Create a test file
+					GameFirstRunfile$="agktest.txt"
+					OpenToWrite(1,GameFirstRunfile$)
+					WriteLine(1,"AGK rules!")
+					CloseFile(1)  					
+				WRITEING FILES------^
+				
+				IF THEN CASE STATEMENT STUFF
+											old stuff to be deleted
+							CurrentTile = Random ( 1, 2 ) // selects between two outputs that will define what type of file is underfoot (used in current system and will be removed)
+						`Defining the Starting tile outputs	
+
+
+							If CurrentTile = 1 // sets a string to the value of the current tile (to be removed in next system)
+								CurrentTile$ = "Grass" 
+							Endif
+							
+							If CurrentTile = 2 // sets a string to the value of the current tile (to be removed in next system)
+								CurrentTile$ = "Dirt"
+							endif	
+						  
+							
+							
+								TextIdentifier = 0 
+							
+								select text$ //Observing what the scaracter enters and dose something (currently only searches)
+							  case "travel left":
+								Print ("Traveling left " )
+								P_WantsTravelLeft = 1
+								
+								Gosub _WorldGenSystem
+								
+								IsCorrectText = 1
+							  endcase
+							  
+							  case "travel right":
+								Print ("Traveling right")
+									P_WantsTravelRight = 1
+									
+									Gosub _WorldGenSystem
+								
+								IsCorrectText = 1
+							  endcase
+							  
+							  case "surroundings":
+								Print ("the ground is "+ CurrentTile$)
+								IsCorrectText = 1
+							  endcase
+							  
+							  case "look around":
+								Print ("the ground is "+ CurrentTile$)
+								IsCorrectText = 1
+								
+							  endcase
+							  
+							  case "search":
+								Print ("the ground is "+ CurrentTile$)
+								IsCorrectText = 1
+								
+							  endcase
+							  
+							  case "look at floor":
+								Print ("the ground is "+ CurrentTile$)
+								IsCorrectText = 1
+								
+							  endcase
+							  
+							  case "inspect floor":
+								Print ("the ground is "+ CurrentTile$)
+								IsCorrectText = 1
+							  endcase
+							  
+							  case default:
+								  TextIdentifier = 1
+								  DeleteEditBox(1)
+								  print("not valid input")
+								  sync()
+								  Sleep(600)
+								  
+							  endcase
+							  
+							endselect
+
+								If TextIdentifier = 1 then Goto EditboxStartlabel
+
+
+
+								DirtobjectLootQuant = 10
+								GrassobjectLootQuant = 10
+								
+							
+							
+							GrassLootItemPickUp = Random ( 0, 2 ) //from 1 to 3		
+							
+							GrassLootItemID = GrassItemsArray[DirtLootItemPickUp]
+							
+							
+							
+							
+							
+							
+							InventorieItemIDCounter = 0
+							counter1 = 1
+							If CurrentTile = 1
+								
+								While counter1 < GrassobjectLootQuant // starts a counter1# variable that will run as many times as there is loot
+
+									
+									InventorieArray[InventorieItemIDCounter] = DirtLootItemID
+									
+									INC InventorieItemIDCounter
+									INC counter1
+
+								Endwhile
+							endif
+
+
+
+
+							DirtLootItemPickUp = Random ( 0, 2 ) //from 1 to 3		
+							
+							DirtLootItemID = DirtItemsArray[DirtLootItemPickUp]
+							
+							InventorieItemIDCounter2 = 0
+							counter2 = 1
+							
+							If CurrentTile = 2
+								
+								While counter2 < DirtobjectLootQuant // starts a counter1# variable that will run as many times as there is loot
+									
+									InventorieArray[InventorieItemIDCounter2]= DirtLootItemID
+									
+									INC InventorieItemIDCounter2
+									INC counter2
+								Endwhile
+				
+				
+				CREATING MULTIPLE SPRITES
+										ButtonRowGenHeightPosCounter = - 300 // this is a counter variable. defines how high the first row is. lower the number the higher.
+										
+										ButtonGenDone = 0
+										
+										For ButtonRowGen = 0 to 6 //defines how many rows of sprites there are
+											ButtonsGenCounter = 100 // defines how far the starting sprites are from the center and is incremented .
+											
+											ButtonsGenSprites = 1 //generic start variable for all of the ids of the sprites
+											
+											GenAdd = 1 //generic start variable for the switch sides variable. 1 is to the right. -1 is to the left 
+											
+											ButtonsGenEnd = 10 //defines how many sprites are in a row overall
+											For ButtonsGen= 1 to ButtonsGenEnd
+											
+												ButtonsGenSprites = CreateSprite ( 0000001 ) // creates a sprite every time its run with a different id because of the ButtonsGenSprites counter 
+												
+												If ButtonsGen = ButtonsGenEnd / 2 + 1 then GenAdd = -1
+												If ButtonsGen = ButtonsGenEnd / 2 + 1 then ButtonsGenCounter = 100
+												
+												If GenAdd = 1 then SetSpritePositionByOffset(  ButtonsGenSprites, XDisplayC / 2 + ButtonsGenCounter, YDisplayC / 2 + ButtonRowGenHeightPosCounter )
+												
+												If GenAdd = -1 then SetSpritePositionByOffset( ButtonsGenSprites, XDisplayC / 2 - ButtonsGenCounter, YDisplayC / 2 + ButtonRowGenHeightPosCounter )
+											
+												ButtonsGenCounter = ButtonsGenCounter + 100
+												
+												ButtonsGenSprites = ButtonsGenSprites + 1						
+												
+											Next ButtonsGen
+											ButtonRowGenHeightPosCounter = ButtonRowGenHeightPosCounter + 100
+										Next ButtonRowGen
+										
+										ButtonGenDone = 1
+										Repeat
+											
+												ButtonID = 1
+											
+											For ButtonActivate = 1 to 70
+
+												ButtonGenX = GetSpriteXByOffset( ButtonActivate )
+												ButtonGenY = GetSpriteYByOffset( ButtonActivate )
+												
+												While GetSpriteHitTest( ButtonID,GetPointerX(),GetPointerY())
+													
+													Print("itWorks")
+													sync()
+													
+													If DevMode = 1 then print("Mouse is over Sprite")
+													sync()						
+													While GetPointerPressed ( ) = 1
+														SetSpritePositionByOffset( 2, ButtonGenX / 2, ButtonGenY / 2 + 30) //sets the button sprite's position by an offset(its center) current settings make the sprite lower than the center of the screen. 
+														TitalScreenExit = 1
+														WorldSelectEnter = 1
+														sync()
+														
+														If DevMode = 1
+															if GetRawKeyPressed(27)  //Esc
+																Exit                  //Close App
+															endif
+														endif	
+														sync()
+													EndWhile
+													sync()	
+												EndWhile
+											
+												ButtonID = ButtonID + 1
+											
+												sync()
+											Next ButtonActivate
+											
+											
+											
+											sync()
+										Until GetPointerPressed ( ) = 1
+										
+										sync()
+			
+			
+			
+				tital-screen
+					//Tital screen initialization codeV1------------------------------------------------------\|/
+						LoadSprite( 1, TitalScreenImage$ )
+						If GameRun = 0 // if the game has not been run yet then the titalscreen loop starts 
+							
+							TitalScreenExit = 0
+							While TitalScreenExit = 0 //loop with variable to exit if a button is pressed 
+								
+								
+								LoadSprite( 0000000, TitalScreenImage$ )
+								AddVirtualButton( 1, XDisplayC / 2, YDisplayC / 2, 50 )
+								//SetVirtualButtonImageUp( index,  ) // code captured for later image to be made
+								sync() //updates the screen so that the tital screen can be seen
+							EndWhile  
+						endif
+					//Tital screen initialization code endV1------------=-0---=--------------------------------^
+					
+					
+					//Tital screen initialization codeV2--------------------------------------------------------\|/
+		
+							If GameRun = 0 // if the game has not been run yet then the titalscreen loop starts 
+								
+								TitalScreenExit = 0 //
+								//load inital sprites and images. some are buttons---\|/
+									LoadSprite( 1, TitalScreenImage$ )
+									LoadSprite( 2, ButtonProto$ )
+
+										
+										SetSpriteShapeBox( 2,  -52, -60, 52, 60,45 ) // makes a square hitbox for the button  coordinates for square hitboxes are from the position of the sprite 0,0 and must be the total height and width divided by 2 and the first 2 must be negitive.
+										SetSpritePositionByOffset( 2, XDisplayC / 2, YDisplayC / 2 + 20) //sets the button sprite's position by an offset(its center) current settings make the sprite lower than the center of the screen. 
+								//load inital sprites and images end------------------^
+								
+									
+									While TitalScreenExit = 0 //loop with variable to exit if a button is pressed 
+										mouseX = GetPointerX()
+										mouseY = GetPointerY()
+										
+										//new button code------\|/
+										
+											if GetPointerState()
+												if GetSpriteHitTest( 2,GetPointerX(),GetPointerY())
+													print("Mouse is over Sprite")
+												endif
+											endif
+												
+											print( mouseX)
+											print( mouseY)
+											print( ScreenFPS())
+										
+										//new button code-------^
+									
+										//SetVirtualButtonImageUp( index,  ) // code captured for later image to be made
+										sync() //updates the screen so that the tital screen can be seen !!!!!!Important to do this in all loops that have graphics!!!!!!!
+										
+									EndWhile  
+								endif
+					//Tital screen initialization code endV2--------------=-0---=--------------------------------^
+		
+				
+		variables
+			identifiers
+				images	
+					0,000,000 -> 9,999,999
+						0,000,000
+							0000000 = tital image
+		display
+			storage
+				display
+					for T=1 to 5
+						Print("test")
+						INVItemID = InventorieArray[T]
+						Gosub _IVN1decoder
+						TEXTPOS= T*30 + 80
+						CreateText (T, INVItemname$ )
+						SetTextPosition ( T, 640,TEXTPOS)
+						SetTextSize ( T, 35)
+						SetTextAlignment( T, 2 )
+					next T
+		editbox stuff
+			EditboxStartlabel: // label usde for incorrect text input 
+			CreateEditBox(1) //crates a text input used for main game world interface
+				SetEditBoxActive(1,1) //makes the  
+				SetEditBoxFocus(1,1)
+				SetEditBoxPosition(1,10,100)
+       
+			Repeat //repeat loop that waits for user text input \|/
+				Print ("placeholder")
+				Sync()
+				
+				Until (GetEditBoxChanged(1)=1) //End Comment---------^
+	
+				text$ = GetEditBoxText(1) //sets the text in textbox to a variable   
+				
+	Graphical
+	
+	Content
+		Character
+			mechanics
+				sleeping
+					sleep for a random time ( cycles)
+			Affinities
+				Affinity system
+					different Affinity routes of speciality in specifc crafts and trades. if the majority of the work you do is in a specific rout then you shall become better in that affinity.
+					 The major affinity routes have different crafting systems.
+						
+				major
+					Mage
+						crafting system
+							magical processes, dusts, essesnces, infusing, enchanting, ect...
+						sub-Affinities
+							Necromancy
+							
+							pyromancy
+							
+							epothacary
+							
+					Mechanist
+						crafting system
+							mechanical machienery, steam power, basic robotics,
+						sub-Affinities
+							Steam engineer
+							
+							Clocksmith
+							
+							
+					Alchemist
+						crafting system
+							chemical synthesis, chemical reactions, potions, chemist's apparatices, evaporation, acids, ect..
+						sub-Affinities
+						 
+					Materialist
+						crafting system
+							collection of materials and assembling them by hand, different workbenches, hand powered tools, tools, blacksmithing.
+						sub-Affinities
+							Blacksmith
+							
+							LeatherWorker
+							
+							Carpenter
+							
+							
+				Minor
+					Scavenger/looter
+					
+					
+				
+		World
+			mechanics
+				planet
+					start on a different
+				time
+					1 tyke is the smallest length of time.
+					10 tykes is a tick.
+					cycle = 250-370 ticks cycle = 2500-3700 tykes ( CycleLengthTicks = Random(250,370)
+						defaultDayHalf = CycleLengthTicks / 2   
+						DayRangeStart = defaultDayHalf - 20 
+						DayRangeEnd = defaultDayHalf + 20
+						DuskTime = Random( DayRangeStart, DayRangeEnd) 
+					1Day= 1cycle  
+			Biomes
+			random events
+				Random encounters 
+					monkey with weapon( random but high chance to have a "GunWand" type of gun and wand are random. The monkey can talk and can be reasoned with. Convorsation:" I didn't know what to do with these things so i shoved them together.  "
+					
+				World generated
+					Random Biome cities( after generation is done if can citi gen = true then random citi type)
+					NukeCaves( natural nuclear reactor caves)
+	
+
+*/
 
